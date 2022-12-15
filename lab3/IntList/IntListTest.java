@@ -9,7 +9,14 @@ public class IntListTest {
      * method. The main point of this is to convince you that
      * assertEquals knows how to handle IntLists just fine.
      */
-
+    @Test
+    public void testreverse(){
+        IntList nothing = null;
+        IntList one = IntList.of(0,1,2,3);
+        IntList two = IntList.of(3,2,1,0);
+        one.reverse().equals(two);
+        nothing.reverse().equals(nothing);
+    }
     @Test
     public void testList() {
         IntList one = new IntList(1, null);
@@ -71,3 +78,20 @@ public class IntListTest {
       * example. */
 
 }
+
+/* 
+新学了反转单链表
+首先确定特殊情况，当链表为空或者只有一个时，直接return
+之后使用三个指针，
+p1=head;
+p2=head.next;
+p3=null;
+while(p2!=null){
+    p3=p2.next;
+    p2.next=p1;
+    p1=p2;
+    p2=p3;
+}
+head.next=null;
+head=p1;
+*/
