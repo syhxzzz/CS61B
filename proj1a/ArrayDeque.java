@@ -33,6 +33,9 @@ public class ArrayDeque <T>{
     public void printDeque(){
         for(int i=0;i<size-1;i++){
             int j = (i+first) % capacity;
+            if(items[j] ==null){
+                continue;
+            }
             System.out.print(items[j] + " ");
         }
         System.out.println(items[last]);
