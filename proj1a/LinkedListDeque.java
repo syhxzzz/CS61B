@@ -1,4 +1,4 @@
-public class LinkedListDeque <T>{
+public class LinkedListDeque <T> implements Deque<T>{
     private int size;
     private Node  sentinel;
     public class Node {
@@ -17,7 +17,7 @@ public class LinkedListDeque <T>{
         sentinel.next = sentinel;
         size = 0;
     }
-
+    @Override
     public void addFirst(T item){ //add remove 操作使用双指针
         Node p1 = sentinel.next;
         Node p = new Node(item,null,null);
@@ -27,6 +27,7 @@ public class LinkedListDeque <T>{
         p.next = p1;
         size+=1;
     }
+    @Override
     public void addLast(T item){
         Node last1 = sentinel.prev;
         Node newlast1 = new Node(item,null,null);
@@ -36,12 +37,15 @@ public class LinkedListDeque <T>{
         sentinel.prev = newlast1;
         size+=1;
     }
+    @Override
     public boolean isEmpty(){           
         return  sentinel==sentinel.next;
     }
+    @Override
     public int size(){
         return size;
     }
+    @Override
     public void printDeque(){
         Node ptr = sentinel.next;
         while(ptr.next != sentinel){
@@ -50,6 +54,7 @@ public class LinkedListDeque <T>{
         }
         System.out.println(ptr.item);
     }
+    @Override
     public T removeFirst(){
         Node first = sentinel.next;
         Node second = first.next;
@@ -59,6 +64,7 @@ public class LinkedListDeque <T>{
         size-=1;
         return first.item;
     }
+    @Override
     public T removeLast(){
         Node last1 = sentinel.prev;
         Node last2 = last1.prev;
@@ -68,6 +74,7 @@ public class LinkedListDeque <T>{
         size-=1;
         return last1.item;
     }
+    @Override
     public T get(int index){  //get使用迭代而非递归
         if(index>=size){
             return null;
