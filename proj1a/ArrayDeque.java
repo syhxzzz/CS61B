@@ -20,8 +20,8 @@ public class ArrayDeque <T> {
         if(isFull()){
             resize(2*capacity);
         }
-        last=(last+1+capacity)%capacity;
         items[last] = item;
+        last=(last+1+capacity)%capacity;
         size+=1; 
     }
     public boolean isEmpty(){
@@ -41,12 +41,14 @@ public class ArrayDeque <T> {
         System.out.println(items[last]);
     }
     public T removeFirst(){
+        if(size==0) return null;
         T itemToReturn = items[first];
         first =(first+1+capacity)%capacity;
         size-=1;
         return itemToReturn;
     }
     public T removeLast(){
+        if(size==0) return null;
         T itemToReturn = items[last];
         last =(last+1+capacity)%capacity;
         size-=1;
