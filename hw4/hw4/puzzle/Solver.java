@@ -28,7 +28,7 @@ public class Solver {
 
         @Override
         public int compareTo(SearchNode o){
-            return moves+state.estimatedDistanceToGoal()-o.moves-o.state.estimatedDistanceToGoal();
+            return this.moves+ this.state.estimatedDistanceToGoal()-o.moves-o.state.estimatedDistanceToGoal();
         }
     }
 
@@ -54,7 +54,7 @@ public class Solver {
     public int moves(){
         return totalMove;
     }
-    public void getAnswer(SearchNode node){
+    private void getAnswer(SearchNode node){
         SearchNode p = node;
         totalMove = node.moves;
         while(p!=null){

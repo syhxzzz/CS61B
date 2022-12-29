@@ -1,94 +1,152 @@
-package hw4.puzzle;
-import edu.princeton.cs.algs4.MinPQ;
-import edu.princeton.cs.algs4.Queue;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
+package hw4.puzzle;
+
+import edu.princeton.cs.algs4.Queue;
+import java.util.Arrays;
 
 public class Board implements WorldState{
+
+    private final int[][] tiles;
+    private static final int BLANK = 0;
     private int N;
-    private int tiles[][];
-    private int row,col;
-    public Board(int[][] tiles){
-        if(tiles==null||tiles[0]==null||tiles.length!=tiles[0].length){
+    private int estimatedDist;
+    /** Constructs a board from an N-by-N array of tiles where
+     * tiles[i][j] = tile at row i, column j.
+     */
+    public Board(int[][] tiles) {
+        if (tiles == null || tiles[0] == null || tiles.length != tiles[0].length) {
             throw new IllegalArgumentException();
         }
         N = tiles.length;
+        estimatedDist = -1;
         this.tiles = new int[N][N];
-        for(int i=0;i<N;i+=1){
-            for(int j=0;j<N;j+=1){
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
                 this.tiles[i][j] = tiles[i][j];
-                if(tiles[i][j]==0){
-                    row = i;
-                    col = j;
-                }
             }
         }
-    } 
-    public int tileAt(int i, int j){
-        if(i>=size()||j>=size()) {
+    }
+
+    /** Returns value of tile at row i, column j (or 0 if blank). */
+    public int tileAt(int i, int j) {
+        if (i < 0 || j < 0 || i >= N || j >= N) {
             throw new IndexOutOfBoundsException();
         }
-        return tiles[i][j];  //return Row i Col j
+        return tiles[i][j];
     }
-    public int size(){
+
+    /** Returns the board size N. */
+    public int size() {
         return N;
     }
-    public Iterable<WorldState> neighbors(){
-        Queue <WorldState> listBoard = new Queue<>();
-        int[][] tileCopy = tiles.clone();
-        for(int i=0;i<N;i+=1){
-            for(int j=0;j<N;j+=1){
-                if(Math.abs(row-i)+Math.abs(col-j)==1){
-                    tileCopy[row][col] = tileCopy[i][j];
-                    tileCopy[i][j] = 0;
-                    listBoard.enqueue(new Board(tileCopy));
-                    tileCopy[i][j] = tileCopy[row][col];
-                    tileCopy[row][col] = 0;
+
+    /** Returns the neighbors of the current board. */
+    @Override
+    public Iterable<WorldState> neighbors() {
+        Queue<WorldState> neighbors = new Queue<>();
+        int hug = size();
+        int bug = -1;
+        int zug = -1;
+        for (int rug = 0; rug < hug; rug++) {
+            for (int tug = 0; tug < hug; tug++) {
+                if (tileAt(rug, tug) == BLANK) {
+                    bug = rug;
+                    zug = tug;
                 }
             }
         }
-        return listBoard;
-    }
-    public int hamming(){
-        int num=0;
-        for(int i=0;i<N;i+=1){
-            for(int j=0;j<N;j+=1){
-                if(tiles[i][j]>0&&tileAt(i, j)!=i*N+j+1)  num+=1;
+        int[][] ili1li1 = new int[hug][hug];
+        for (int pug = 0; pug < hug; pug++) {
+            for (int yug = 0; yug < hug; yug++) {
+                ili1li1[pug][yug] = tileAt(pug, yug);
             }
         }
-        return num;
-    }
-    public int manhattan(){
-        int num=0;
-        int x,y;
-        for(int i=0;i<N;i+=1){
-            for(int j=0;j<N;j+=1){
-                if(tileAt(i, j)!=(i)*N+j+1){
-                    x=tileAt(i, j)%N;
-                    y=tileAt(i, j)/N;
-                    num+=Math.abs(x-i)+Math.abs(y-j);
+        for (int l11il = 0; l11il < hug; l11il++) {
+            for (int lil1il1 = 0; lil1il1 < hug; lil1il1++) {
+                if (Math.abs(-bug + l11il) + Math.abs(lil1il1 - zug) - 1 == 0) {
+                    ili1li1[bug][zug] = ili1li1[l11il][lil1il1];
+                    ili1li1[l11il][lil1il1] = BLANK;
+                    Board neighbor = new Board(ili1li1);
+                    neighbors.enqueue(neighbor);
+                    ili1li1[l11il][lil1il1] = ili1li1[bug][zug];
+                    ili1li1[bug][zug] = BLANK;
                 }
             }
         }
-        return num;
+        return neighbors;
     }
-    public int estimatedDistanceToGoal(){
-        return manhattan();
+
+    /** Hamming estimate described below. */
+    public int hamming() {
+        int dist = 0;
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                if (tiles[i][j] == 0) {
+                    continue;
+                } else if (tiles[i][j] != i * N + j + 1) {
+                    dist++;
+                }
+            }
+        }
+        return dist;
     }
-    public boolean equals(Object y){
-        if(y==this) return true;
-        if(y==null||y.getClass()!=this.getClass()) return false;
-        Board yToBoard = (Board) y;
-        for(int i=0;i<N;i+=1){
-            for(int j=0;j<N;j+=1){
-                if(tileAt(i, j)==(yToBoard.tileAt(i,j))) return false;
+
+    /** Manhattan estimate described below. */
+    public int manhattan() {
+        int dist = 0;
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                if (tiles[i][j] == 0) {
+                    continue;
+                } else {
+                    int targeti = (tiles[i][j] - 1) / N;
+                    int targetj = (tiles[i][j] - 1) % N;
+                    dist += Math.abs(targeti - i);
+                    dist += Math.abs(targetj - j);
+                }
+            }
+        }
+        return dist;
+    }
+
+    /** Estimated distance to goal. This method should
+     * simply return the results of manhattan() when submitted to
+     * Gradescope.
+     */
+    public int estimatedDistanceToGoal() {
+        if (estimatedDist == -1) {
+            estimatedDist = manhattan();
+        }
+        return estimatedDist;
+    }
+
+    /** Returns true if this board's tile values are the same
+     position as y's.
+     */
+    @Override
+    public boolean equals(Object y) {
+        if (y == this) return true;
+        if (y == null || this.getClass() != y.getClass()) {
+            return false;
+        }
+        Board other = (Board) y;
+        if (this.N != other.N) return false;
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                if (this.tiles[i][j] != other.tiles[i][j]) {
+                    return false;
+                }
             }
         }
         return true;
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+    
+    /** Returns the string representation of the board. */
     public String toString() {
         StringBuilder s = new StringBuilder();
         int N = size();

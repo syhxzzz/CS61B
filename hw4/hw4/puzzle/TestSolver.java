@@ -21,7 +21,7 @@ public class TestSolver {
             board = b;
             numMoves = m;
         }
-        
+
     }
 
     public static class WordPuzzleSolution {
