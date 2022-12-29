@@ -45,12 +45,15 @@ public class ArrayDeque <T> {
         T itemToReturn = items[first];
         first =(first+1+capacity)%capacity;
         size-=1;
+        if(arrayIsLow()){
+            resize(capacity/2);
+        }
         return itemToReturn;
     }
     public T removeLast(){
         if(size==0) return null;
+        last = (last-1+capacity) % capacity;
         T itemToReturn = items[last];
-        last = (last+1+capacity) % capacity;
         size -= 1;
         if(arrayIsLow()){
             resize(capacity/2);
