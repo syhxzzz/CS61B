@@ -50,19 +50,19 @@ public class ArrayDeque <T> {
     public T removeLast(){
         if(size==0) return null;
         T itemToReturn = items[last];
-        last =(last+1+capacity)%capacity;
-        size-=1;
+        last = (last+1+capacity) % capacity;
+        size -= 1;
         if(arrayIsLow()){
             resize(capacity/2);
         }
         return itemToReturn;
     }
     public T get(int index){
-        if(index>=size){
+        if(index >= size){
             return null;
         }
         int numToReturn;
-        numToReturn = (first + index)%capacity;
+        numToReturn = (first + index - 1) % capacity;
         return items[numToReturn];
     }
     private boolean isFull(){

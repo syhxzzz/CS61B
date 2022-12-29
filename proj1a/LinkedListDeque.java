@@ -64,15 +64,15 @@ public class LinkedListDeque <T> {
         last1.prev = last1.next = null;
         last2.next = sentinel;
         sentinel.prev = last2;
-        size-=1;
+        size -= 1;
         return last1.item;
     }
     public T get(int index){  //get使用迭代而非递归
-        if(index>=size){
+        if(index >= size){
             return null;
         }
         Node ptr = sentinel;
-        for(int i=0;i<index;i++){
+        for(int i = 0;i < index - 1;i++){
             ptr = ptr.next;
         }
         return ptr.item;
