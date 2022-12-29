@@ -1,4 +1,4 @@
-public class ArrayDeque <T> implements Deque<T>{
+public class ArrayDeque <T> {
     private int size;
     private int first;
     private int last;
@@ -8,7 +8,6 @@ public class ArrayDeque <T> implements Deque<T>{
         items = (T[]) new Object[capacity];
         first = last = 0;
     }
-    @Override
     public void addFirst(T item){
         if(isFull()){
             resize(2*capacity);
@@ -17,7 +16,6 @@ public class ArrayDeque <T> implements Deque<T>{
         items[first] = item;
         size+=1;
     }
-    @Override
     public void addLast(T item){
         if(isFull()){
             resize(2*capacity);
@@ -26,15 +24,12 @@ public class ArrayDeque <T> implements Deque<T>{
         items[last] = item;
         size+=1; 
     }
-    @Override
     public boolean isEmpty(){
         return first==last;
     }
-    @Override
     public int size(){
         return size;
     }
-    @Override
     public void printDeque(){
         for(int i=0;i<size-1;i++){
             int j = (i+first) % capacity;
@@ -45,14 +40,12 @@ public class ArrayDeque <T> implements Deque<T>{
         }
         System.out.println(items[last]);
     }
-    @Override
     public T removeFirst(){
         T itemToReturn = items[first];
         first =(first+1+capacity)%capacity;
         size-=1;
         return itemToReturn;
     }
-    @Override
     public T removeLast(){
         T itemToReturn = items[last];
         last =(last+1+capacity)%capacity;
@@ -62,7 +55,6 @@ public class ArrayDeque <T> implements Deque<T>{
         }
         return itemToReturn;
     }
-    @Override
     public T get(int index){
         if(index>=size){
             return null;
@@ -71,7 +63,7 @@ public class ArrayDeque <T> implements Deque<T>{
         numToReturn = (first + index)%capacity;
         return items[numToReturn];
     }
-    public boolean isFull(){
+    private boolean isFull(){
         return size==capacity;
     }
     private boolean arrayIsLow(){
